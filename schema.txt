@@ -1,0 +1,34 @@
+user: {
+    firstName: string,
+    lastName: string,
+    username: string,
+    password: password,
+    image: string,
+}
+suratMasuk: {
+    noSurat: string,
+    tglSurat: date,
+    tglTerima: date,
+    perihal: string,
+    asalInstansi: string,
+    disposisi: [{_id: ObjectId}]
+    file: string,
+}
+suratKeluar: {
+    noSurat: string,
+    tglSurat: date,
+    tglKirim: date,
+    perihal: string,
+    file: string,
+}
+
+disposisi: {
+    tujuan: string,
+    sifat: string,
+    batasWaktu: date,
+}
+
+laporan: {
+    suratMasukId: [{_id: ObjectId}],
+    suratKeluarId: [{_id: ObjectId}]
+}

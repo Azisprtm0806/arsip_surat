@@ -1,0 +1,93 @@
+<div class="tab-pane fade" id="show-editSurat">
+  <div class="card shadow mb-4 mt-2">
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <form
+            action="/admin/surat-masuk?_method=PUT"
+            method="post"
+            enctype="multipart/form-data"
+          >
+            <div class="form-group">
+              <label for="name">tanggal diterima</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= surat.tglTerima %>"
+                name="tglTerima"
+              />
+            </div>
+            <div class="form-group">
+              <label for="name">Tanggal Surat</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= surat.tglSurat %>"
+                name="tglSurat"
+              />
+            </div>
+            <div class="form-group">
+              <label for="name">No Surat</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= surat.noSurat %>"
+                name="noSurat"
+              />
+            </div>
+            <div class="form-group">
+              <label for="name">Perihal</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= surat.perihal %>"
+                name="perihal"
+              />
+            </div>
+            <div class="form-group">
+              <label for="name">Asal Surat</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= surat.asalSurat %>"
+                name="asalSurat"
+              />
+            </div>
+            <div class="form-group">
+              <label for="name">Tujuan</label>
+              <input
+                type="text"
+                class="form-control"
+                value="<%= surat.tujuan %>"
+                name="tujuan"
+              />
+            </div>
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Keterangan</label>
+              <textarea
+                class="form-control"
+                id="exampleFormControlTextarea1"
+                rows="3"
+                name="keterangan"
+              >
+<%= surat.keterangan %></textarea
+              >
+            </div>
+            <div class="form-group">
+              <label for="name">PDF</label>
+              <input type="file" class="form-control" name="file" />
+              <span>Pilih PDF Untuk Edit PDF</span>
+            </div>
+            <input
+              type="hidden"
+              class="form-control"
+              value="<%= surat.id %>"
+              name="id"
+            />
+            <button type="submit" class="btn btn-primary center">Update</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,106 @@
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="add_modal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Surat Masuk</h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form
+        action="/admin/surat-masuk"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="name">Tanggal diterima</label>
+            <input
+              type="date"
+              class="form-control"
+              name="tglTerima"
+              placeholder="Enter name bank"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">Tanggal Surat</label>
+            <input
+              type="date"
+              class="form-control"
+              name="tglSurat"
+              placeholder="Enter nomor rekening"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">No Surat</label>
+            <input
+              type="text"
+              class="form-control"
+              name="noSurat"
+              placeholder="Enter No Surat"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">Perihal</label>
+            <input
+              type="text"
+              class="form-control"
+              name="perihal"
+              placeholder="Enter Perihal"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">Asal Surat</label>
+            <input
+              type="text"
+              class="form-control"
+              name="asalSurat"
+              placeholder="Enter Asal"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">Tujuan</label>
+            <input
+              type="text"
+              class="form-control"
+              name="tujuan"
+              placeholder="Enter tujuan"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="name">Keterangan</label>
+            <textarea name="keterangan" class="form-control"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="name">PDF</label>
+            <input type="file" class="form-control" name="file" required />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
