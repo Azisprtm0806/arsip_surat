@@ -1,0 +1,56 @@
+<div
+  class="tab-pane fade show active"
+  id="show-suratMasuk"
+  role="tabpanel"
+  aria-labelledby="home-tab"
+>
+  <div class="card shadow mb-4 mt-2">
+    <div class="card-body">
+      <div class="table-responsive">
+        <a
+          href="/admin/surat-masuk-print"
+          class="
+            d-none d-sm-inline-block
+            btn btn-sm btn-primary
+            shadow-sm
+            float-right
+          "
+          target="_BLANK"
+          style="margin-left: 5px"
+          ><i class="fas fa-download fa-sm text-white-50"></i
+        ></a>
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nomer Surat</th>
+              <th>Tanggal Diterima</th>
+              <th>Tanggal Surat</th>
+              <th>Asal Surat</th>
+              <th>Tujuan</th>
+              <th>Keterangan</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for( let i = 0; i < suratMasuk.length; i++ ) { %>
+            <tr>
+              <td><%= i+1 %></td>
+              <td><%= suratMasuk[i].noSurat %></td>
+              <td><%= suratMasuk[i].tglTerima %></td>
+              <td><%= suratMasuk[i].tglSurat %></td>
+              <td><%= suratMasuk[i].asalSurat %></td>
+              <td><%= suratMasuk[i].tujuan %></td>
+              <td><%= suratMasuk[i].keterangan %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<div class="tab-pane fade" id="show-disposisi">
+  <div class="card shadow mb-4 mt-2">
+    <div class="card-body">
+      <div class="table-responsive">
+        <a
+          href="#"
+          class="
+            d-none d-sm-inline-block
+            btn btn-sm btn-primary
+            shadow-sm
+            float-right
+          "
+          style="margin-left: 5px"
+          ><i class="fas fa-download fa-sm text-white-50"></i
+        ></a>
+        <table
+          class="table table-bordered"
+          id="dataTableDisposisi"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Tujuan</th>
+              <th>Sifat</th>
+              <th>Batas Waktu</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for( let i = 0; i < disposisi.length; i++ ) { %>
+            <tr>
+              <td><%= i+1 %></td>
+              <td><%= disposisi[i].tujuan %></td>
+              <td><%= disposisi[i].sifat %></td>
+              <td><%= disposisi[i].batasWaktu %></td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

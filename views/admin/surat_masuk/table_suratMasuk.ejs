@@ -23,7 +23,7 @@
           <tr>
             <th>No</th>
             <th>Nomer Surat</th>
-            <!-- <th>Tanggal Diterima</th> -->
+            <th>Tanggal Diterima</th>
             <!-- <th>Tanggal Surat</th> -->
             <th>Asal Surat</th>
             <th>Tujuan</th>
@@ -36,6 +36,8 @@
           <tr>
             <td><%= i+1 %></td>
             <td><%= surat[i].noSurat %></td>
+            <td><%= surat[i].tglTerima %></td>
+            <!-- <td><%= surat[i].tglSurat %></td> -->
             <td><%= surat[i].asalSurat %></td>
             <td><%= surat[i].tujuan %></td>
             <td><%= surat[i].keterangan %></td>

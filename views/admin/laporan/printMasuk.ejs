@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        box-sizing: border-box;
+      }
+      h3,
+      h4 {
+        text-align: center;
+        line-height: 2px;
+      }
+    </style>
+  </head>
+  <body>
+    <h3>HIMPUNAN MAHASISWA TEKNIK INFORMATIKA</h3>
+    <h3>FAKULTAS TEKNIK INFORMATIKA</h3>
+    <h3>UNIVERSITAS IBN KHALDUN BOGORO</h3>
+    <h4>
+      Sekretariat:Jl. K.H Soleh Iskandar Km.2 Kedung Badak Tanah Sareal Kota
+      Bogor
+    </h4>
+    <hr />
+
+    <h2 style="text-align: center">ARSIP SURAT MASUK HIMATEKINFO</h2>
+
+    <br />
+
+    <table border="1" cellpadding="3" id="printTable">
+      <thead>
+        <tr>
+          <th>No</th>
+          <th>Nomer Surat</th>
+          <th>Tanggal Diterima</th>
+          <th>Tanggal Surat</th>
+          <th>Asal Surat</th>
+          <th>Tujuan</th>
+          <th>Keterangan</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for( let i = 0; i < surat.length; i++ ) { %>
+        <tr>
+          <td><%= i+1 %></td>
+          <td><%= surat[i].noSurat %></td>
+          <td><%= surat[i].tglTerima %></td>
+          <td><%= surat[i].tglSurat %></td>
+          <td><%= surat[i].asalSurat %></td>
+          <td><%= surat[i].tujuan %></td>
+          <td><%= surat[i].keterangan %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <!-- Optional JavaScript -->
+    <script>
+      window.print();
+      // function printData() {
+      //   var divToPrint = document.getElementById("printTable");
+      //   newWin = window.open("");
+      //   newWin.document.write(divToPrint.outerHTML);
+      //   newWin.print();
+      //   newWin.close();
+      // }
+    </script>
+  </body>
+</html>

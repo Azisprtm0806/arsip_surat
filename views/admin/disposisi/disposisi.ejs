@@ -75,34 +75,11 @@
                       role="group"
                       aria-label="Button group with nested dropdown"
                     >
-                      <div class="btn-group btn-group-sm" role="group">
-                        <button
-                          id="btnGroupDrop1"
-                          type="button"
-                          class="btn btn-info dropdown-toggle"
-                          data-toggle="dropdown"
-                          aria-haspopup="true"
-                          aria-expanded="false"
-                        ></button>
-                        <div
-                          class="dropdown-menu"
-                          aria-labelledby="btnGroupDrop1"
-                        >
-                          <a
-                            class="dropdown-item"
-                            href="/admin/surat-masuk/<%= dataDisposisi[i].id %>"
-                            >Detail | Edit</a
-                          >
-                          <form
-                            action="/admin/surat-masuk/<%= dataDisposisi[i].id %>?_method=DELETE"
-                            method="post"
-                          >
-                            <button type="submit" class="dropdown-item">
-                              Hapus
-                            </button>
-                          </form>
-                        </div>
-                      </div>
+                      <a
+                        href="/admin/surat-masuk/edit/disposisi/<%= dataDisposisi[i].id %>"
+                        class="btn btn-warning btn-circle btn-sm"
+                        ><i class="fas fa-edit"></i
+                      ></a>
                     </div>
                   </td>
                 </tr>

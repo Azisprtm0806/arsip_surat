@@ -11,7 +11,7 @@ const disposisi = new mongoose.Schema({
     required: true,
   },
   batasWaktu: {
-    type: Date,
+    type: String,
     required: true,
   },
   masukId: [

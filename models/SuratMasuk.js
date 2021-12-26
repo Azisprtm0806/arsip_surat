@@ -7,11 +7,11 @@ const suratMasuk = new mongoose.Schema({
     required: true,
   },
   tglSurat: {
-    type: Date,
+    type: String,
     required: true,
   },
   tglTerima: {
-    type: Date,
+    type: String,
     required: true,
   },
   perihal: {

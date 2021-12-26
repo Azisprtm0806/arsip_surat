@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const suratKeluar = new mongoose.Schema({
   tanggal: {
-    type: Date,
+    type: String,
     required: true,
   },
   nomerSurat: {

@@ -7,7 +7,7 @@ const path = require("path");
 const fs = require("fs-extra");
 const bcrypt = require("bcryptjs");
 const { kirimEmail } = require("../helpers/sendMail");
-const jsonwebtoken = require("jsonwebtoken");
+const { buildPDF } = require("../helpers/pdf-service");
 
 module.exports = {
   // sign-in
@@ -41,7 +41,7 @@ module.exports = {
       if (!user) {
         req.flash(
           "alertMessage",
-          "Username atau email Yang anda masukan tidak terdaftar!!"
+          "Username Yang anda masukan tidak terdaftar!!"
         );
         req.flash("alertStatus", "danger");
 
@@ -71,12 +71,43 @@ module.exports = {
     req.session.destroy();
     res.redirect("/admin/signin");
   },
+
   // dashboard
-  viewDashboard: (req, res) => {
-    res.render("admin/dashboard/view_dashboard", {
-      title: "Arsip | Dashboard",
-      user: req.session.user,
-    });
+  viewDashboard: async (req, res) => {
+    const suratMasuk = await SuratMasuk.count();
+    const suratKeluar = await SuratKeluar.count();
+    const disposisi = await Disposisi.count();
+    try {
+      res.render("admin/dashboard/view_dashboard", {
+        title: "Arsip | Dashboard",
+        suratMasuk,
+        suratKeluar,
+        disposisi,
+        user: req.session.user,
+      });
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/dashboard");
+    }
+  },
+
+  dataDashboard: async (req, res) => {
+    const suratMasuk = await SuratMasuk.count();
+    const suratKeluar = await SuratKeluar.count();
+    const disposisi = await Disposisi.count();
+    const data = {
+      suratMasuk,
+      suratKeluar,
+      disposisi,
+    };
+    try {
+      res.status(200).json({
+        data: data,
+      });
+    } catch (error) {
+      console.log(err);
+    }
   },
   // end Dashboard
 
@@ -84,6 +115,7 @@ module.exports = {
   viewSuratMasuk: async (req, res) => {
     try {
       const surat = await SuratMasuk.find();
+      console.log(await surat.tglTerima);
       const alertMessage = req.flash("alertMessage");
       const alertStatus = req.flash("alertStatus");
       const alert = {
@@ -97,6 +129,8 @@ module.exports = {
         user: req.session.user,
       });
     } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
       res.redirect("/admin/surat-masuk");
     }
   },
@@ -152,6 +186,7 @@ module.exports = {
       res.redirect("/admin/surat-masuk");
     }
   },
+
   editSuratMasuk: async (req, res) => {
     try {
       const {
@@ -202,7 +237,21 @@ module.exports = {
   deleteSuratMasuk: async (req, res) => {
     try {
       const { id } = req.params;
-      const surat = await SuratMasuk.findOne({ _id: id });
+      const surat = await SuratMasuk.findOne({ _id: id }).populate(
+        "disposisiId"
+      );
+      for (let i = 0; i < surat.disposisiId.length; i++) {
+        Disposisi.findOne({ _id: surat.disposisiId[i]._id })
+          .then((disposisi) => {
+            disposisi.remove();
+          })
+          .catch((error) => {
+            req.flash("alertMessage", `${(error, message)}`);
+            req.flash("alertStatus", "danger");
+
+            res.redirect("/admin/surat-masuk");
+          });
+      }
       await fs.unlink(path.join(`public/${surat.file}`));
       await surat.remove();
       req.flash("alertMessage", "Success Delete Surat Masuk!");
@@ -214,23 +263,27 @@ module.exports = {
       res.redirect("/admin/surat-masuk");
     }
   },
+  printSuratMasuk: async (req, res) => {
+    const surat = await SuratMasuk.find();
+    res.render("admin/laporan/printMasuk", {
+      surat,
+    });
+  },
   // end surat-masuk
 
   // disposisi
   viewDisposisi: async (req, res) => {
     const { masukId } = req.params;
     const dataDisposisi = await Disposisi.find({ masukId: masukId });
-
+    const alertMessage = req.flash("alertMessage");
+    const alertStatus = req.flash("alertStatus");
+    const alert = {
+      message: alertMessage,
+      status: alertStatus,
+    };
     try {
-      const alertMessage = req.flash("alertMessage");
-      const alertStatus = req.flash("alertStatus");
-      const alert = {
-        message: alertMessage,
-        status: alertStatus,
-      };
-
       res.render("admin/disposisi/view_disposisi", {
-        title: "Staycation | Disposisi",
+        title: "Arsip | Disposisi",
         alert,
         masukId,
         dataDisposisi,
@@ -256,13 +309,52 @@ module.exports = {
       suratMasuk.disposisiId.push({ _id: disposisi._id });
       await suratMasuk.save();
 
-      req.flash("alertMessage", "Success Add Feature!");
+      req.flash("alertMessage", "Success Add Disposisi!");
       req.flash("alertStatus", "success");
       res.redirect(`/admin/surat-masuk/disposisi/${masukId}`);
     } catch (error) {
-      req.flash("alertMessage", "Success Add Feature!");
-      req.flash("alertStatus", "success");
+      req.flash("alertMessage", `${error}`);
+      req.flash("alertStatus", "danger");
       res.redirect(`/admin/surat-masuk/disposisi/${masukId}`);
+    }
+  },
+
+  viewDetailDisposisi: async (req, res) => {
+    const { id } = req.params;
+    const disposisi = await Disposisi.findOne({ _id: id });
+    const alertMessage = req.flash("alertMessage");
+    const alertStatus = req.flash("alertStatus");
+    const alert = {
+      message: alertMessage,
+      status: alertStatus,
+    };
+    try {
+      res.render("admin/disposisi/show_disposisi", {
+        title: "Arsip | Disposisi",
+        disposisi,
+        alert,
+        user: req.session.user,
+      });
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect(`/admin/disposisi/${id}`);
+    }
+  },
+
+  editDisposisi: async (req, res) => {
+    try {
+      const { id, tujuan, sifat, batasWaktu } = req.body;
+      const disposisi = await Disposisi.findOne({ _id: id });
+      disposisi.tujuan = tujuan;
+      disposisi.sifat = sifat;
+      disposisi.batasWaktu = batasWaktu;
+      await disposisi.save();
+      req.flash("alertMessage", "Success Edit Disposisi!");
+      req.flash("alertStatus", "success");
+      res.redirect(`/admin/surat-masuk/edit/disposisi/${id}`);
+    } catch (error) {
+      res.redirect(`/admin/surat-masuk/edit/disposisi/${id}`);
     }
   },
 
@@ -340,7 +432,7 @@ module.exports = {
         surat.perihal = perihal;
         surat.keterangan = keterangan;
         await surat.save();
-        req.flash("alertMessage", "Success Edit Surat!");
+        req.flash("alertMessage", "Success Edit Surat Keluar!");
         req.flash("alertStatus", "success");
         res.redirect("/admin/surat-keluar");
       } else {
@@ -369,26 +461,40 @@ module.exports = {
       const surat = await SuratKeluar.findOne({ _id: id });
       await fs.unlink(path.join(`public/${surat.file}`));
       await surat.remove();
-      req.flash("alertMessage", "Success Delete Surat Masuk!");
+      req.flash("alertMessage", "Success Delete Surat Keluar!");
       req.flash("alertStatus", "success");
       res.redirect("/admin/surat-keluar");
     } catch (error) {
       req.flash("alertMessage", `${error.message}`);
       req.flash("alertStatus", "danger");
-      console.log(error);
+      res.redirect("/admin/surat-keluar");
     }
+  },
+  printSuratKeluar: async (req, res) => {
+    const surat = await SuratKeluar.find();
+    res.render("admin/laporan/printKeluar", {
+      surat,
+    });
   },
   // end surat-keluar
 
   // laporan
-  viewLaporan: (req, res) => {
-    res.render("admin/laporan/view_laporan", {
-      title: "Arsip | laporan",
-      user: {
-        username: req.session.user.username,
-        nama: req.session.user.nama,
-      },
-    });
+  viewLaporan: async (req, res) => {
+    const suratMasuk = await SuratMasuk.find();
+    const suratKeluar = await SuratKeluar.find();
+    const disposisi = await Disposisi.find();
+    try {
+      res.render("admin/laporan/view_laporan", {
+        title: "Arsip | laporan",
+        suratMasuk,
+        suratKeluar,
+        disposisi,
+        user: {
+          username: req.session.user.username,
+          nama: req.session.user.nama,
+        },
+      });
+    } catch (error) {}
   },
   // end laporan
 
@@ -406,19 +512,22 @@ module.exports = {
   },
 
   // daftar
-  viewDaftar: (req, res) => {
+  viewDaftar: async (req, res) => {
     const alertMessage = req.flash("alertMessage");
     const alertStatus = req.flash("alertStatus");
     const alert = {
       message: alertMessage,
       status: alertStatus,
     };
+    const users = await User.find();
     res.render("admin/user/view_daftarUser", {
       title: "Arsip | Daftar User",
       alert,
+      users,
       user: req.session.user,
     });
   },
+
   daftarUser: async (req, res) => {
     const { username, nama, email, password } = req.body;
 
@@ -453,6 +562,76 @@ module.exports = {
     res.redirect("/admin/daftar");
   },
 
+  viewEditUser: (req, res) => {
+    const alertMessage = req.flash("alertMessage");
+    const alertStatus = req.flash("alertStatus");
+    const alert = {
+      message: alertMessage,
+      status: alertStatus,
+    };
+    res.render("admin/user/form_edit", {
+      title: "Arsip | Edit Profile",
+      alert,
+      user: {
+        id: req.session.user,
+        nama: req.session.user,
+        username: req.session.user,
+        email: req.session.user,
+        image: req.session.user,
+      },
+    });
+  },
+
+  actionEditUser: async (req, res) => {
+    try {
+      const { id, nama, username, email } = req.body;
+      const user = await User.findOne({ _id: id });
+      if (req.file == undefined) {
+        user.nama = nama;
+        user.username = username;
+        user.email = email;
+        await user.save();
+        req.flash(
+          "alertMessage",
+          "SUCCESS EDIT PROFILE! LOGOUT DAN LOGIN KEMBALI JIKA INGIN MELIHAT PERUBAHAN"
+        );
+        req.flash("alertStatus", "success");
+        res.redirect("/admin/user/edit");
+      } else {
+        await fs.unlink(path.join(`public/${user.image}`));
+        user.nama = nama;
+        user.username = username;
+        user.email = email;
+        user.image = `images/${req.file.filename}`;
+        await user.save();
+        req.flash(
+          "alertMessage",
+          "SUCCESS EDIT PROFILE! LOGOUT DAN LOGIN KEMBALI JIKA INGIN MELIHAT PERUBAHAN"
+        );
+        req.flash("alertStatus", "success");
+        res.redirect("/admin/user/edit");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findOne({ _id: id });
+      await fs.unlink(path.join(`public/${user.image}`));
+      await user.remove();
+      req.flash("alertMessage", "Success Delete User!");
+      req.flash("alertStatus", "success");
+      res.redirect("/admin/daftar");
+    } catch (error) {
+      req.flash("alertMessage", `${error.message}`);
+      req.flash("alertStatus", "danger");
+      res.redirect("/admin/daftar");
+    }
+  },
+
   // reset password
   viewResetPassword: (req, res) => {
     const alertMessage = req.flash("alertMessage");
@@ -475,10 +654,9 @@ module.exports = {
       const user = await User.findOne({ username: username });
       if (user) {
         const hashPassword = await bcrypt.hash(password, 10);
-        User.password = hashPassword;
-        console.log(hashPassword);
-        await User.updateOne();
-        req.flash("alertMessage", "succes reset password!!");
+        user.password = hashPassword;
+        await user.save();
+        req.flash("alertMessage", "success reset password!!");
         req.flash("alertStatus", "success");
         res.redirect("/admin/reset-password/:token");
       } else {

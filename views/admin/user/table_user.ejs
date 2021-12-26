@@ -1,0 +1,71 @@
+<div
+  class="tab-pane fade show active"
+  id="show-user"
+  role="tabpanel"
+  aria-labelledby="home-tab"
+>
+  <div class="card shadow mb-4 mt-2">
+    <div class="card-body">
+      <div class="table-responsive">
+        <a
+          href="#"
+          class="
+            d-none d-sm-inline-block
+            btn btn-sm btn-primary
+            shadow-sm
+            float-right
+          "
+          style="margin-left: 5px"
+          ><i class="fas fa-download fa-sm text-white-50"></i
+        ></a>
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama</th>
+              <th>Username</th>
+              <th>email</th>
+              <th>image</th>
+              <th>action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for( let i = 0; i < users.length; i++ ) { %>
+            <tr>
+              <td><%= i+1 %></td>
+              <td><%= users[i].nama %></td>
+              <td><%= users[i].username %></td>
+              <td><%= users[i].email %></td>
+              <td>
+                <img
+                  src="http://localhost:3000/<%= users[i].image %>"
+                  alt="imageUrl"
+                  width="70px"
+                />
+              </td>
+              <td>
+                <form
+                  action="/admin/user/<%= users[i].id %>?_method=DELETE"
+                  method="post"
+                >
+                  <button
+                    type="submit"
+                    class="btn btn-danger btn-circle btn-sm"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

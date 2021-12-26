@@ -22,10 +22,10 @@
         <thead>
           <tr>
             <th>No</th>
-            <!-- <th>Tanggal</th> -->
-            <th>Nomer Surat</th>
+            <th>Tanggal</th>
             <th>Tujuan</th>
             <th>Perihal</th>
+            <th>Nomer Surat</th>
             <th>Keterangan</th>
             <th>Action</th>
           </tr>
@@ -34,10 +34,10 @@
           <% for( let i = 0; i < surat.length; i++ ) { %>
           <tr>
             <td><%= i+1 %></td>
-            <!-- <td><%= surat[i].tanggal %></td> -->
-            <td><%= surat[i].nomerSurat %></td>
+            <td><%= surat[i].tanggal %></td>
             <td><%= surat[i].tujuan %></td>
             <td><%= surat[i].perihal %></td>
+            <td><%= surat[i].nomerSurat %></td>
             <td><%= surat[i].keterangan %></td>
             <td>
               <div
