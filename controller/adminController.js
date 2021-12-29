@@ -7,7 +7,6 @@ const path = require("path");
 const fs = require("fs-extra");
 const bcrypt = require("bcryptjs");
 const { kirimEmail } = require("../helpers/sendMail");
-const { buildPDF } = require("../helpers/pdf-service");
 
 module.exports = {
   // sign-in
@@ -710,7 +709,7 @@ module.exports = {
         from: "Azis",
         to: email,
         subject: "Link Reset PasswordAdmin",
-        html: `<p>Silahkan Klik Link di bawah untuk Reset Password Anda</p> <p>http://localhost:3000/admin/reset-password/${token}</p>`,
+        html: `<p>Silahkan Klik Link di bawah untuk Reset Password Anda</p> <p>https://himatekinfo-arsip-surat.herokuapp.com/admin/reset-password/${token}</p>`,
       };
       kirimEmail(templateEmail);
 

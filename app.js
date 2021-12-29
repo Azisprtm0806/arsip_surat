@@ -13,11 +13,14 @@ var usersRouter = require("./routes/users");
 const adminRouter = require("./routes/admin");
 // mongoose
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://127.0.0.1:27017/db_arsip-surat", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  autoIndex: true,
-});
+mongoose.connect(
+  "mongodb+srv://azisprtm:azisprtm@cluster0.9elkd.mongodb.net/DBarsip_surat?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    autoIndex: true,
+  }
+);
 
 var app = express();
 
